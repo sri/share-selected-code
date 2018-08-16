@@ -71,7 +71,16 @@ function getTextWithLines(text: string, start: number, end: number) {
     if (result.length === 0) {
         return null;
     }
-    return result.map(x => `${x[0]}${x[1]}`).join('\n');
+    return result.map(x => `${x[0]} ${x[1]}`).join('\n');
+}
+
+function selectByWholeLines(selection: vscode.Selection) {
+    const newStart = new vscode.Position(selection.start.line, 0);
+    const newEnd = (selection.end.character === 0) ?
+        selection.end :
+        new vscode.Position(selection.end.line + 1, 0);
+
+    return new vscode.Selection(newStart, newEnd);
 }
 
 function formatSelections(editor: vscode.TextEditor, site: string) {
@@ -81,7 +90,7 @@ function formatSelections(editor: vscode.TextEditor, site: string) {
 
     let formatted: string[] = [];
     for (let i = 0; i < editor.selections.length; i++) {
-        const selection = editor.selections[i];
+        const selection = selectByWholeLines(editor.selections[i]);
         const [startLine, endLine] = getSelectionLines(selection);
         let selectedText = editor.document.getText(selection);
         const selectedTextWithLines = getTextWithLines(selectedText, startLine, endLine);
