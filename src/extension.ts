@@ -2,12 +2,10 @@
 
 import * as vscode from 'vscode';
 
-import Git from './git';
-import THIRD_PARTY_SITES from './sites';
 import { copyToClipboard } from './clipboard';
-import { formatSelections } from './selection';
+import { getSelectionAndPathForSharing } from './selection';
 
-function doShareFor(site: string) {
+function shareSelectionAndPathFor(site: string) {
     const editor = vscode.window.activeTextEditor;
 
     if (!editor) {
@@ -15,22 +13,14 @@ function doShareFor(site: string) {
         return;
     }
 
-    const fullFileName = Git.getNameInRepo(editor.document.fileName);
-    const formatted = formatSelections(editor, site);
-
-    let result = '';
-    if (formatted) {
-        result = THIRD_PARTY_SITES[site].formatBold(fullFileName) + ':\n\n' + formatted + '\n';
-    } else {
-        result = fullFileName + '\n';
-    }
-
+    const result = getSelectionAndPathForSharing(editor, site);
     const error = copyToClipboard(result);
-    if (error) {
-        vscode.window.showInformationMessage(`Error copying to clipboard: ${error}`);
-    } else {
-        vscode.window.showInformationMessage('Copied to clipboard!');
-    }
+    const message =
+        error ?
+            `Error copying to clipboard: ${error}` :
+            'Copied to clipboard!';
+
+    vscode.window.showInformationMessage(message);
 }
 
 export function activate(context: vscode.ExtensionContext) {
@@ -38,10 +28,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     const disposables = [
         vscode.commands.registerCommand('extension.shareSelectionAndPath.slack', () => {
-            doShareFor('slack');
+            shareSelectionAndPathFor('slack');
         }),
         vscode.commands.registerCommand('extension.shareSelectionAndPath.jira', () => {
-            doShareFor('jira');
+            shareSelectionAndPathFor('jira');
         })
     ];
 
