@@ -1,15 +1,15 @@
 # share-selection-and-path README
 
-This VSCode extension helps you share your code to third party sites like JIRA and Slack.
-It formats the code in accordance with the selected site.
+This VSCode extension helps you share your code to sites like JIRA and Slack.
+It formats the selected code in accordance with the selected site.
 
-Here is an example for JIRA:
+Here is an example for JIRA (without comments):
 
 ```
-*share-selection-and-path/src/extension.ts*:
+*share-selection-and-path/src/extension.ts*:   # bold the path; relative to repo
 
 {noformat}
-43 function getSelectionLines(selection: vscode.Selection) {
+43 function getSelectionLines(selection: vscode.Selection) { # add line numbers
 44     let start = selection.start.line + 1;
 45     let end = selection.end.line + 1;
 46     if (start > end) {
@@ -25,10 +25,10 @@ Here is an example for JIRA:
 * Currently supports: JIRA and Slack
 * Includes line numbers
 * Handles multiple selections correctly
-* It handles partial selections correctly
 
 ## Requirements
 
+This has been tested on Visual Studio Code 1.26.0.
 
 ## Extension Settings
 
