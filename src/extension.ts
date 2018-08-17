@@ -7,13 +7,16 @@ import { getSelectionAndPathForSharing } from './selection';
 
 function shareSelectionAndPathFor(site: string) {
     const editor = vscode.window.activeTextEditor;
-
     if (!editor) {
         vscode.window.showInformationMessage('No file in current tab');
         return;
     }
 
     const result = getSelectionAndPathForSharing(editor, site);
+    if (!result) {
+        return;
+    }
+
     const error = copyToClipboard(result);
     const message =
         error ?

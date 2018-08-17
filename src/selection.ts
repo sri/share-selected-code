@@ -44,6 +44,7 @@ class SelectionFormatter {
             }
             result.push([n, lines[i]]);
         }
+
         // Remove empty lines at beginning and end.
         while (result.length > 0 && result[0][1] === '') {
             result.shift();
@@ -51,6 +52,7 @@ class SelectionFormatter {
         while (result.length > 0 && result[result.length - 1][1] === '') {
             result.pop();
         }
+
         if (result.length === 0) {
             return null;
         }
@@ -78,12 +80,20 @@ class SelectionFormatter {
     }
 }
 
-export function getSelectionAndPathForSharing(editor: vscode.TextEditor, site: string): string {
-    const path = Git.getNameInRepo(editor.document.fileName);
+export function getSelectionAndPathForSharing(editor: vscode.TextEditor, site: string): string|null {
+    const path = editor.document.isUntitled ? '' : Git.getNameInRepo(editor.document.fileName);
     const formattedSelection = new SelectionFormatter(editor, site).format();
 
+    if (!path && !formattedSelection) {
+        return null;
+    }
+
     if (formattedSelection) {
-        return SITES[site].formatBold(path) + ':\n\n' + formattedSelection + '\n';
+        let formattedPath = '';
+        if (path.length > 0) {
+            formattedPath = SITES[site].formatBold(path) + ':\n\n';
+        }
+        return formattedPath + formattedSelection + '\n';
     } else {
         return path;
     }
