@@ -56,7 +56,7 @@ class SelectionFormatter {
         if (result.length === 0) {
             return null;
         }
-        return result.map(x => `${x[0]} ${x[1]}`).join('\n');
+        return result.map(x => (x[1] === '') ? x[0] : `${x[0]} ${x[1]}`).join('\n');
     }
 
     format() {

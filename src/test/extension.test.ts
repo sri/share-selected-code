@@ -1,22 +1,114 @@
-//
-// Note: This example test is leveraging the Mocha test framework.
-// Please refer to their documentation on https://mochajs.org/ for help.
-//
-
-// The module 'assert' provides assertion methods from node
 import * as assert from 'assert';
+import * as path from 'path';
 
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
-// import * as vscode from 'vscode';
-// import * as myExtension from '../extension';
+import * as vscode from 'vscode';
 
-// Defines a Mocha test suite to group tests of similar kind together
-suite("Extension Tests", function () {
+import { getSelectionAndPathForSharing } from '../selection';
+import Git from '../git';
 
-    // Defines a Mocha unit test
-    test("Something 1", function() {
-        assert.equal(-1, [1, 2, 3].indexOf(5));
-        assert.equal(-1, [1, 2, 3].indexOf(0));
+describe("Extension Tests", () => {
+  let editor: vscode.TextEditor;
+  let initialSelection: vscode.Selection;
+
+  const getEditor = async (path: any) => {
+    const document = await vscode.workspace.openTextDocument(path);
+    editor = await vscode.window.showTextDocument(document);
+    initialSelection = editor.selection;
+  };
+
+  const parentDir = path.resolve(path.join(__dirname, '..', '..'));
+
+  before(() => {
+    Git.getRoot = (path: string) => parentDir;
+  });
+
+  afterEach(() => {
+    if (editor) {
+      editor.selection = initialSelection;
+    }
+  });
+
+  describe("Without a file on disk (new tab that hasn't been saved yet)", () => {
+    before(async () => {
+      await getEditor(vscode.Uri.parse('untitled:Foo-1'));
+    });
+
+    describe('without any selections', () => {
+      describe('JIRA', () => {
+        it('should return null', async () => {
+          const result = getSelectionAndPathForSharing(editor, 'jira');
+          assert.equal(result, null);
+        });
+      });
+
+      describe('Slack', () => {
+        it('should return null', async () => {
+          const result = getSelectionAndPathForSharing(editor, 'slack');
+          assert.equal(result, null);
+        });
+      });
+    });
+  });
+
+    describe('With a file on disk', () => {
+
+      before(async () => {
+        const testFilePath = path.join(parentDir, 'src', 'test', 'fixtures', 'test.txt');
+        await getEditor(testFilePath);
+      });
+
+      describe('With multiple selections and whose lines are not fully selected', () => {
+        beforeEach(() => {
+          // For selection, lines are zero-based within VSCode.
+          const selections = [
+            new vscode.Selection(0, 0, 1, 1),
+            // Line 4 (actual line is 5) starts with empty line
+            // which should not be returned.
+            new vscode.Selection(4, 0, 7, 5)
+          ];
+          editor.selection = selections[0];
+          editor.selections = selections;
+        });
+
+        describe('JIRA', () => {
+          it('should return whole lines, correctly formatted (skipping leading & trailing newlines)', async () => {
+            const result = getSelectionAndPathForSharing(editor, 'jira');
+            const expected = `*share-selection-and-path/src/test/fixtures/test.txt*:
+
+{noformat}
+1 this is line 1
+2 this is line 2
+{noformat}
+
+{noformat}
+6 this is line 6
+7
+8 this is the final line and is line 8
+{noformat}
+`;
+            assert.equal(result, expected);
+          });
+        });
+
+        describe('Slack', () => {
+          it('should return in the correct format', async () => {
+            const result = getSelectionAndPathForSharing(editor, 'slack');
+            const expected = `*share-selection-and-path/src/test/fixtures/test.txt*:
+
+\`\`\`
+1 this is line 1
+2 this is line 2
+\`\`\`
+
+\`\`\`
+6 this is line 6
+7
+8 this is the final line and is line 8
+\`\`\`
+`;
+            assert.equal(result, expected);
+          });
+        });
+      });
     });
 });
