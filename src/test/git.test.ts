@@ -6,8 +6,11 @@ describe('Git utility', () => {
   describe('#getNameInRepo()', () => {
 
     describe('when not in a git repo', () => {
-      it('should return the passed in argument unmodified', () => {
+      before(() => {
         Git.getRoot = (path: string) => null;
+      });
+
+      it('should return the passed in argument unmodified', () => {
         const result = Git.getNameInRepo('/some/path/not-in-git-repo/test.txt');
         assert.equal(result, '/some/path/not-in-git-repo/test.txt');
       });
