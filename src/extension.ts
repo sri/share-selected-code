@@ -3,16 +3,16 @@
 import * as vscode from 'vscode';
 
 import { copyToClipboard } from './clipboard';
-import { getSelectionAndPathForSharing } from './selection';
+import { shareSelectedCodeFor } from './selection';
 
-function shareSelectionAndPathFor(site: string) {
+function shareForSite(site: string) {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
         vscode.window.showInformationMessage('No file in current tab');
         return;
     }
 
-    const result = getSelectionAndPathForSharing(editor, site);
+    const result = shareSelectedCodeFor(editor, site);
     if (!result) {
         return;
     }
@@ -27,18 +27,15 @@ function shareSelectionAndPathFor(site: string) {
 }
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('Starting up Share Selection and Path extension...');
+    console.log('Starting up Share Selected Code extension...');
 
-    const disposables = [
-        vscode.commands.registerCommand('extension.shareSelectionAndPath.slack', () => {
-            shareSelectionAndPathFor('slack');
-        }),
-        vscode.commands.registerCommand('extension.shareSelectionAndPath.jira', () => {
-            shareSelectionAndPathFor('jira');
-        })
-    ];
+    const registerCommand = (command: string, fn: any) => {
+        const disposable = vscode.commands.registerCommand(command, fn);
+        context.subscriptions.push(disposable);
+    };
 
-    disposables.forEach(disposable => context.subscriptions.push(disposable));
+    registerCommand('extension.shareSelectedCode.slack', () => { shareForSite('slack'); }),
+    registerCommand('extension.shareSelectedCode.jira',  () => { shareForSite('jira');  })
 }
 
 export function deactivate() {

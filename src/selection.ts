@@ -80,7 +80,7 @@ class SelectionFormatter {
     }
 }
 
-export function getSelectionAndPathForSharing(editor: vscode.TextEditor, site: string): string | null {
+export function shareSelectedCodeFor(editor: vscode.TextEditor, site: string): string | null {
     const path = editor.document.isUntitled ? '' : Git.getNameInRepo(editor.document.fileName);
     const formattedSelection = new SelectionFormatter(editor, site).format();
 

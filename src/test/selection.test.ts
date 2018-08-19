@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import * as vscode from 'vscode';
 
-import { getSelectionAndPathForSharing } from '../selection';
+import { shareSelectedCodeFor } from '../selection';
 import Git from '../git';
 
 describe("Extension Tests", () => {
@@ -36,14 +36,14 @@ describe("Extension Tests", () => {
     describe('without any selections', () => {
       describe('JIRA', () => {
         it('should return null', async () => {
-          const result = getSelectionAndPathForSharing(editor, 'jira');
+          const result = shareSelectedCodeFor(editor, 'jira');
           assert.equal(result, null);
         });
       });
 
       describe('Slack', () => {
         it('should return null', async () => {
-          const result = getSelectionAndPathForSharing(editor, 'slack');
+          const result = shareSelectedCodeFor(editor, 'slack');
           assert.equal(result, null);
         });
       });
@@ -72,7 +72,7 @@ describe("Extension Tests", () => {
 
       describe('JIRA', () => {
         it('should return whole lines, correctly formatted (skipping leading & trailing newlines)', async () => {
-          const result = getSelectionAndPathForSharing(editor, 'jira');
+          const result = shareSelectedCodeFor(editor, 'jira');
           const expected = `*share-selected-code/src/test/fixtures/test.txt*:
 
 {noformat}
@@ -92,7 +92,7 @@ describe("Extension Tests", () => {
 
       describe('Slack', () => {
         it('should return in the correct format', async () => {
-          const result = getSelectionAndPathForSharing(editor, 'slack');
+          const result = shareSelectedCodeFor(editor, 'slack');
           const expected = `*share-selected-code/src/test/fixtures/test.txt*:
 
 \`\`\`
