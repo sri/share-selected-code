@@ -1,7 +1,7 @@
 # share-selection-and-path README
 
 This VSCode extension helps you share your code to sites like JIRA and Slack.
-It formats the selected code in accordance with the selected site.
+It formats the selected code according to the site's style.
 
 Here is an example for JIRA (without comments):
 
