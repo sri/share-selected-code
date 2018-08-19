@@ -22,7 +22,7 @@ Here is an example for JIRA (without comments):
 
 And here is how the above looks in JIRA:
 
-<h2 align="center"><img src="https://raw.githubusercontent.com/sri/share-selected-code/master/screenshots/jira-screenshot.png"><br>JIRA Screenshot</h2>
+![JIRA Screenshot](screenshots/jira-screenshot.png "JIRA Screenshot")
 
 ## Features
 
