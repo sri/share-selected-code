@@ -1,7 +1,7 @@
 {
-    "name": "share-selection-and-path",
-    "displayName": "Share Selection and Path",
-    "description": "Share Selection and Path to third party sites",
+    "name": "share-selected-code",
+    "displayName": "Share Selected Code",
+    "description": "Share selected code to apps like JIRA and Slack",
     "version": "0.0.1",
     "publisher": "sri",
     "engines": {
@@ -11,19 +11,19 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.shareSelectionAndPath.slack",
-        "onCommand:extension.shareSelectionAndPath.jira"
+        "onCommand:extension.shareSelectedCode.slack",
+        "onCommand:extension.shareSelectedCode.jira"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
-                "command": "extension.shareSelectionAndPath.slack",
-                "title": "Share Selection And Path for Slack"
+                "command": "extension.shareSelectedCode.slack",
+                "title": "Share Selected Code to Slack"
             },
             {
-                "command": "extension.shareSelectionAndPath.jira",
-                "title": "Share Selection And Path for JIRA"
+                "command": "extension.shareSelectedCode.jira",
+                "title": "Share Selected Code to JIRA"
             }
         ]
     },

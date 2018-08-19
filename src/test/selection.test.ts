@@ -50,30 +50,30 @@ describe("Extension Tests", () => {
     });
   });
 
-    describe('With a file on disk', () => {
+  describe('With a file on disk', () => {
 
-      before(async () => {
-        const testFilePath = path.join(parentDir, 'src', 'test', 'fixtures', 'test.txt');
-        await getEditor(testFilePath);
+    before(async () => {
+      const testFilePath = path.join(parentDir, 'src', 'test', 'fixtures', 'test.txt');
+      await getEditor(testFilePath);
+    });
+
+    describe('With multiple selections and whose lines are not fully selected', () => {
+      beforeEach(() => {
+        // For selection, lines are zero-based within VSCode.
+        const selections = [
+          new vscode.Selection(0, 0, 1, 1),
+          // Line 4 (actual line is 5) starts with empty line
+          // which should not be returned.
+          new vscode.Selection(4, 0, 7, 5)
+        ];
+        editor.selection = selections[0];
+        editor.selections = selections;
       });
 
-      describe('With multiple selections and whose lines are not fully selected', () => {
-        beforeEach(() => {
-          // For selection, lines are zero-based within VSCode.
-          const selections = [
-            new vscode.Selection(0, 0, 1, 1),
-            // Line 4 (actual line is 5) starts with empty line
-            // which should not be returned.
-            new vscode.Selection(4, 0, 7, 5)
-          ];
-          editor.selection = selections[0];
-          editor.selections = selections;
-        });
-
-        describe('JIRA', () => {
-          it('should return whole lines, correctly formatted (skipping leading & trailing newlines)', async () => {
-            const result = getSelectionAndPathForSharing(editor, 'jira');
-            const expected = `*share-selection-and-path/src/test/fixtures/test.txt*:
+      describe('JIRA', () => {
+        it('should return whole lines, correctly formatted (skipping leading & trailing newlines)', async () => {
+          const result = getSelectionAndPathForSharing(editor, 'jira');
+          const expected = `*share-selected-code/src/test/fixtures/test.txt*:
 
 {noformat}
 1 this is line 1
@@ -86,14 +86,14 @@ describe("Extension Tests", () => {
 8 this is the final line and is line 8
 {noformat}
 `;
-            assert.equal(result, expected);
-          });
+          assert.equal(result, expected);
         });
+      });
 
-        describe('Slack', () => {
-          it('should return in the correct format', async () => {
-            const result = getSelectionAndPathForSharing(editor, 'slack');
-            const expected = `*share-selection-and-path/src/test/fixtures/test.txt*:
+      describe('Slack', () => {
+        it('should return in the correct format', async () => {
+          const result = getSelectionAndPathForSharing(editor, 'slack');
+          const expected = `*share-selected-code/src/test/fixtures/test.txt*:
 
 \`\`\`
 1 this is line 1
@@ -106,9 +106,9 @@ describe("Extension Tests", () => {
 8 this is the final line and is line 8
 \`\`\`
 `;
-            assert.equal(result, expected);
-          });
+          assert.equal(result, expected);
         });
       });
     });
+  });
 });

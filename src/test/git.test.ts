@@ -25,6 +25,5 @@ describe('Git utility', () => {
         assert.equal(result, 'in-git-repo/dir1/dir2/abc.rb');
       });
     });
-
   });
 });
