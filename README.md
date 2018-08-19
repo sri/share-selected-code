@@ -20,7 +20,7 @@ Here is an example for JIRA (without comments):
 {noformat}
 ```
 
-And here is how the above looks in JIRA:
+Screenshot of the above in JIRA:
 
 ![JIRA Screenshot](screenshots/jira-screenshot.png "JIRA Screenshot")
 
