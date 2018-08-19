@@ -20,6 +20,11 @@ Here is an example for JIRA (without comments):
 {noformat}
 ```
 
+And here is how the above looks in JIRA:
+
+![JIRA](https://raw.githubusercontent.com/sri/share-selected-code/master/screenshots/jira-screenshot.png)
+
+
 ## Features
 
 * Currently supports: JIRA and Slack
