@@ -4,6 +4,14 @@
     "description": "Share selected code to apps like JIRA and Slack",
     "version": "0.0.1",
     "publisher": "sri",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/sri/share-selected-code.git"
+    },
+    "homepage": "https://github.com/sri/share-selected-code",
+    "bugs": {
+      "url": "https://github.com/sri/share-selected-code/issues"
+    },
     "engines": {
         "vscode": "^1.26.0"
     },
