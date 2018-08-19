@@ -1,4 +1,4 @@
-# Share Selected Code README
+# Share Selected Code
 
 This VSCode extension helps you share your code to sites like JIRA and Slack.
 It formats the selected code according to the site's style.
