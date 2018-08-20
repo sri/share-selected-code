@@ -81,16 +81,12 @@ class SelectionFormatter {
 }
 
 export function shareSelectedCodeFor(editor: vscode.TextEditor, site: string): string | null {
-    const path = editor.document.isUntitled ? '' : Git.getNameInRepo(editor.document.fileName);
+    const path = editor.document.isUntitled ? null : Git.getNameInRepo(editor.document.fileName);
     const formattedSelection = new SelectionFormatter(editor, site).format();
-
-    if (!path && !formattedSelection) {
-        return null;
-    }
 
     if (formattedSelection) {
         let formattedPath = '';
-        if (path.length > 0) {
+        if (path) {
             formattedPath = SITES[site].formatBold(path) + ':\n\n';
         }
         return formattedPath + formattedSelection + '\n';
