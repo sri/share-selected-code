@@ -3,7 +3,22 @@
 This VSCode extension helps you share your code to sites like JIRA and Slack.
 It formats the selected code according to the site's style.
 
-Here is an example for JIRA (without comments):
+Here is an example for JIRA:
+
+## 1) If this is the code that you have selected in your VSCode window
+
+```
+    selectByWholeLines(selection: vscode.Selection) {
+        const newStart = new vscode.Position(selection.start.line, 0);
+        const newEnd = (selection.end.character === 0) ?
+            selection.end :
+            new vscode.Position(selection.end.line + 1, 0);
+
+        return new vscode.Selection(newStart, newEnd);
+    }
+```
+
+## 2) And you invoke "Share Selected Code for JIRA" command, this will what be copied to your clipboard:
 
 ```
 *share-selected-code/src/selection.ts*:
@@ -19,6 +34,8 @@ Here is an example for JIRA (without comments):
 24     }
 {noformat}
 ```
+
+## 3) And here is how it'll look when posted to JIRA:
 
 Screenshot of the above in JIRA:
 
@@ -39,8 +56,8 @@ This has been tested on Visual Studio Code 1.26.0.
 
 There are currently two commands:
 
-*extension.shareSelectionAndPath.slack*
+*extension.shareSelectedCode.slack*
 
-*extension.shareSelectionAndPath.jira*
+*extension.shareSelectedCode.jira*
 
 **Enjoy!!**
