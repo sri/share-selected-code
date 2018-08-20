@@ -56,8 +56,8 @@ This has been tested on Visual Studio Code 1.26.0.
 
 There are currently two commands:
 
-*extension.shareSelectedCode.slack*
+Share Selected Code to Slack: *extension.shareSelectedCode.slack*
 
-*extension.shareSelectedCode.jira*
+Share Selected Code to JIRA: *extension.shareSelectedCode.jira*
 
 **Enjoy!!**

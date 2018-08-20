@@ -2,7 +2,7 @@
     "name": "share-selected-code",
     "displayName": "Share Selected Code",
     "description": "Share selected code to apps like JIRA and Slack",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "publisher": "sri",
     "repository": {
       "type": "git",
