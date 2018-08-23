@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 import { shareSelectedCodeFor } from '../selection';
 import Git from '../git';
 
-describe("Extension Tests", () => {
+describe("Selection Tests", () => {
   let editor: vscode.TextEditor;
   let initialSelection: vscode.Selection;
 
@@ -55,6 +55,12 @@ describe("Extension Tests", () => {
     before(async () => {
       const testFilePath = path.join(parentDir, 'src', 'test', 'fixtures', 'test.txt');
       await getEditor(testFilePath);
+    });
+
+    describe('Without any selections', () => {
+      it('should return null', () => {
+        assert.equal(shareSelectedCodeFor(editor, 'jira'), null);
+      });
     });
 
     describe('With multiple selections and whose lines are not fully selected', () => {
