@@ -84,13 +84,13 @@ export function shareSelectedCodeFor(editor: vscode.TextEditor, site: string): s
     const path = editor.document.isUntitled ? null : Git.getNameInRepo(editor.document.fileName);
     const formattedSelection = new SelectionFormatter(editor, site).format();
 
-    if (formattedSelection) {
-        let formattedPath = '';
-        if (path) {
-            formattedPath = SITES[site].formatBold(path) + ':\n\n';
-        }
-        return formattedPath + formattedSelection + '\n';
-    } else {
-        return path;
+    if (!formattedSelection) {
+        return null;
     }
+
+    let formattedPath = '';
+    if (path) {
+        formattedPath = SITES[site].formatBold(path) + ':\n\n';
+    }
+    return formattedPath + formattedSelection + '\n';
 }

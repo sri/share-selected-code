@@ -6,24 +6,42 @@ import { copyToClipboard } from './clipboard';
 import { shareSelectedCodeFor } from './selection';
 
 function shareForSite(site: string) {
+    const { showErrorMessage, showInformationMessage } = vscode.window;
+
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
-        vscode.window.showInformationMessage('No file in current tab');
+        showErrorMessage('No file in current tab');
         return;
     }
 
     const result = shareSelectedCodeFor(editor, site);
     if (!result) {
+        showErrorMessage('Nothing selected.' + getGitDiffHelpMessage());
         return;
     }
 
     const error = copyToClipboard(result);
-    const message =
-        error ?
-            `Error copying to clipboard: ${error}` :
-            'Copied to clipboard!';
+    if (error) {
+        showErrorMessage(`Error copying to clipboard: ${error}`);
+        return;
+    }
 
-    vscode.window.showInformationMessage(message);
+    showInformationMessage('Copied to clipboard!');
+}
+
+// When viewing a Git diff -- 2 editors, left one has a Git scheme and the
+// right one has a File scheme -- if user selects from the left hand side
+// (ie, the previous version of the file), that editor is read-only and
+// isn't really active. Try to be helpful in that case.
+function getGitDiffHelpMessage() {
+    const { visibleTextEditors } = vscode.window;
+    if (visibleTextEditors.length === 2) {
+      const schemes = visibleTextEditors.map(e => e.document.uri.scheme);
+      if ((schemes[0] === "git" && schemes[1] === "file") || (schemes[0] === "file" && schemes[1] === "git")) {
+        return '\nFor a Git diff, please select from the current version (that\'s on the right hand side) and not the old version.';
+      }
+    }
+    return '';
 }
 
 export function activate(context: vscode.ExtensionContext) {
