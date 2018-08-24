@@ -14,6 +14,13 @@ class SelectionFormatter {
         this.site = site;
     }
 
+    // Return a new selection that selects complete
+    // lines. For the first selected line, it should start
+    // at the 1st character of the line. For the last
+    // selected line, it should end at the last character of
+    // that line or the 1st character of the next line
+    // (which uses the fact that `getTextWithLines` removes
+    // empty lines).
     selectByWholeLines(selection: vscode.Selection) {
         const newStart = new vscode.Position(selection.start.line, 0);
         const newEnd = (selection.end.character === 0) ?
