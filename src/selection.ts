@@ -23,6 +23,8 @@ class SelectionFormatter {
         return new vscode.Selection(newStart, newEnd);
     }
 
+    // Internally, in VSCode, line numbers are 0-based.
+    // We want to show line numbers to users. So adjust by 1.
     getLineNums(selection: vscode.Selection) {
         let start = selection.start.line + 1;
         let end = selection.end.line + 1;
@@ -32,6 +34,10 @@ class SelectionFormatter {
         return [start, end];
     }
 
+    // Prefix lines of selected text with line numbers.
+    // Remove empty lines at the beginning and
+    // ending of a selection. Return null if there aren't
+    // any lines after the trimming.
     getTextWithLines(text: string, start: number, end: number) {
         const endStr = `${end}`;
         const lines = text.split('\n');
@@ -69,11 +75,11 @@ class SelectionFormatter {
             const selection = this.selectByWholeLines(this.editor.selections[i]);
             const [startLine, endLine] = this.getLineNums(selection);
             let selectedText = this.editor.document.getText(selection);
-            const selectedTextWithLines = this.getTextWithLines(selectedText, startLine, endLine);
-            if (!selectedTextWithLines) {
+            const selectedTextWithLineNums = this.getTextWithLines(selectedText, startLine, endLine);
+            if (!selectedTextWithLineNums) {
                 continue;
             }
-            const formattedText = SITES[this.site].formatSelection(selectedTextWithLines);
+            const formattedText = SITES[this.site].formatSelection(selectedTextWithLineNums);
             formatted.push(formattedText);
         }
         return formatted.join('\n\n');
